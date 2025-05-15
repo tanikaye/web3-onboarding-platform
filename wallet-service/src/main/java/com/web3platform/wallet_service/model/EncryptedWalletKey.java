@@ -1,29 +1,30 @@
-package com.web3platform.wallet_service;
+package com.web3platform.wallet_service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class Wallet {
+public class EncryptedWalletKey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String address;
+    @Column(nullable = false)
+    private String walletAddress;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String encryptedPrivateKey;
 
     @Column(nullable = false)
-    private double balance;
+    private String recoveryType; // "SOCIAL", "MFA", "CLOUD"
 
-    @Column(nullable = false)
-    private String network; // e.g., "ethereum", "polygon", etc.
+    @Column(columnDefinition = "TEXT")
+    private String recoveryData; // JSON string containing recovery-specific data
 
     @Column(nullable = false)
     private boolean isActive = true;

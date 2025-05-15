@@ -1,4 +1,4 @@
-package com.web3platform.wallet_service;
+package com.web3platform.wallet_service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,41 +10,34 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wallet {
+public class MfaInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String address;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long userId;
 
     @Column(nullable = false)
-    private double balance;
+    private String secretKey;
 
     @Column(nullable = false)
-    private String network; // e.g., "ethereum", "polygon", etc.
-
-    @Column(nullable = false)
-    private boolean isActive = true;
+    private boolean enabled = false;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "last_updated_at")
-    private LocalDateTime lastUpdatedAt;
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "last_used_at")
+    private LocalDateTime lastUsedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        lastUpdatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        lastUpdatedAt = LocalDateTime.now();
+        lastUsedAt = LocalDateTime.now();
     }
 }
