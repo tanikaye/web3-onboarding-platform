@@ -37,6 +37,9 @@ public class Wallet {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "encrypted_private_key", nullable = false)
+    private String encryptedPrivateKey;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
