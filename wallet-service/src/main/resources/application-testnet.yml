@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: ${TESTNET_DB_URL}
+    username: ${TESTNET_DB_USERNAME}
+    password: ${TESTNET_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+web3:
+  network: sepolia
+  rpc-url: ${TESTNET_RPC_URL}
+  ws-url: ${TESTNET_WS_URL}
+  chain-id: 11155111
+  contracts:
+    uniswap:
+      router: ${TESTNET_UNISWAP_ROUTER}
+      factory: ${TESTNET_UNISWAP_FACTORY}
+    aave:
+      lending-pool: ${TESTNET_AAVE_LENDING_POOL}
+      price-oracle: ${TESTNET_AAVE_PRICE_ORACLE}
+    opensea:
+      marketplace: ${TESTNET_OPENSEA_MARKETPLACE}
+      registry: ${TESTNET_OPENSEA_REGISTRY}
+
+security:
+  jwt:
+    secret: ${TESTNET_JWT_SECRET}
+    expiration: 86400000 # 24 hours
+
+websocket:
+  allowed-origins: ${TESTNET_ALLOWED_ORIGINS}
+  message-size-limit: 8192
+  heartbeat-interval: 30000
+
+logging:
+  level:
+    com.web3platform: INFO
+    org.web3j: WARN
+    org.springframework: INFO
+
+server:
+  port: ${TESTNET_SERVER_PORT:8080}
+  ssl:
+    enabled: true
+    key-store: ${TESTNET_SSL_KEYSTORE}
+    key-store-password: ${TESTNET_SSL_PASSWORD}
