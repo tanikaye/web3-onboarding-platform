@@ -25,9 +25,11 @@ public class DappTransaction {
 
     public enum TransactionStatus {
         PENDING,
-        COMPLETED,
+        SUBMITTED,
+        CONFIRMED,
         FAILED,
-        CANCELLED
+        CANCELLED,
+        REVERTED
     }
 
     @Id
@@ -74,6 +76,12 @@ public class DappTransaction {
 
     @Column(name = "contract_address")
     private String contractAddress;
+
+    @Column(name = "function_name")
+    private String functionName;
+
+    @Column(name = "function_params", columnDefinition = "TEXT")
+    private String functionParams;
 
     @Column(name = "value", precision = 36, scale = 18)
     private BigDecimal value;

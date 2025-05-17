@@ -9,6 +9,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.utils.Convert;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -91,6 +92,34 @@ public class TokenBalanceService {
         } catch (Exception e) {
             log.error("Error getting gas price", e);
             throw new RuntimeException("Failed to get gas price: " + e.getMessage());
+        }
+    }
+
+    public BigDecimal getBalance(String walletAddress, String tokenAddress) {
+        try {
+            // For native token (ETH), use eth_getBalance
+            if (tokenAddress.equalsIgnoreCase("0x0000000000000000000000000000000000000000")) {
+                BigInteger balance = web3j.ethGetBalance(walletAddress, DefaultBlockParameterName.LATEST)
+                        .send()
+                        .getBalance();
+                return Convert.fromWei(balance.toString(), Convert.Unit.ETHER);
+            }
+
+            // For ERC20 tokens, use the balanceOf function
+            String data = "0x70a08231000000000000000000000000" + walletAddress.substring(2);
+            String response = web3j.ethCall(
+                    org.web3j.protocol.core.methods.request.Transaction.createEthCallTransaction(
+                            null,
+                            tokenAddress,
+                            data),
+                    DefaultBlockParameterName.LATEST)
+                    .send()
+                    .getValue();
+
+            BigInteger balance = new BigInteger(response.substring(2), 16);
+            return Convert.fromWei(balance.toString(), Convert.Unit.ETHER);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get token balance: " + e.getMessage());
         }
     }
 }

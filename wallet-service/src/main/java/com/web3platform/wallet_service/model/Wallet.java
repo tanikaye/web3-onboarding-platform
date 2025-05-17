@@ -1,4 +1,4 @@
-package com.web3platform.wallet_service;
+package com.web3platform.wallet_service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "wallets")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class Wallet {
     @Column(nullable = false)
     private String network; // e.g., "ethereum", "polygon", etc.
 
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
     @Column(name = "created_at", nullable = false)
@@ -37,7 +38,7 @@ public class Wallet {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "encrypted_private_key", nullable = false)
+    @Column(name = "encrypted_private_key", nullable = false, columnDefinition = "TEXT")
     private String encryptedPrivateKey;
 
     @PrePersist

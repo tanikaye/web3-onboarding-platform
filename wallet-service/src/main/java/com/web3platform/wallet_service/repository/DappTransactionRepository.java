@@ -15,12 +15,14 @@ import java.util.Optional;
 
 @Repository
 public interface DappTransactionRepository extends JpaRepository<DappTransaction, Long> {
-    List<DappTransaction> findByUserId(Long userId);
-    List<DappTransaction> findByWalletAddress(String walletAddress);
-    List<DappTransaction> findByStatus(DappTransaction.TransactionStatus status);
-    List<DappTransaction> findByUserIdAndStatus(Long userId, DappTransaction.TransactionStatus status);
-    List<DappTransaction> findByWalletAddressAndStatus(String walletAddress, DappTransaction.TransactionStatus status);
-    List<DappTransaction> findByUserIdAndDappName(Long userId, String dappName);
+    Page<DappTransaction> findByUserId(Long userId, Pageable pageable);
+    Page<DappTransaction> findByWalletAddress(String walletAddress, Pageable pageable);
+    Page<DappTransaction> findByStatus(DappTransaction.TransactionStatus status, Pageable pageable);
+    Page<DappTransaction> findByType(DappTransaction.TransactionType type, Pageable pageable);
+    Page<DappTransaction> findByTypeAndStatus(DappTransaction.TransactionType type, DappTransaction.TransactionStatus status, Pageable pageable);
+    Page<DappTransaction> findByUserIdAndStatus(Long userId, DappTransaction.TransactionStatus status, Pageable pageable);
+    Page<DappTransaction> findByWalletAddressAndStatus(String walletAddress, DappTransaction.TransactionStatus status, Pageable pageable);
+    Page<DappTransaction> findByUserIdAndDappName(Long userId, String dappName, Pageable pageable);
     Optional<DappTransaction> findByTransactionHash(String transactionHash);
     Page<DappTransaction> findByUserIdAndNetworkOrderByCreatedAtDesc(Long userId, String network, Pageable pageable);
 
@@ -31,10 +33,10 @@ public interface DappTransactionRepository extends JpaRepository<DappTransaction
             "(:userId IS NULL OR t.userId = :userId) AND " +
             "(:network IS NULL OR t.network = :network) AND " +
             "(:status IS NULL OR t.status = :status) AND " +
-            "(:type IS NULL OR t.transactionType = :type) AND " +
+            "(:type IS NULL OR t.type = :type) AND " +
             "(:dappName IS NULL OR t.dappName = :dappName) AND " +
-            "(:startDate IS NULL OR t.createdAt >= :startDate) AND " +
-            "(:endDate IS NULL OR t.createdAt <= :endDate) AND " +
+            "(:startDate IS NULL OR t.timestamp >= :startDate) AND " +
+            "(:endDate IS NULL OR t.timestamp <= :endDate) AND " +
             "(:minValue IS NULL OR t.value >= :minValue) AND " +
             "(:maxValue IS NULL OR t.value <= :maxValue) AND " +
             "(:walletAddress IS NULL OR t.walletAddress = :walletAddress)")
@@ -66,8 +68,4 @@ public interface DappTransactionRepository extends JpaRepository<DappTransaction
             @Param("userId") Long userId,
             @Param("query") String query,
             Pageable pageable);
-
-    Page<DappTransaction> findByTypeAndStatus(String type, String status, Pageable pageable);
-    Page<DappTransaction> findByType(String type, Pageable pageable);
-    Page<DappTransaction> findByStatus(String status, Pageable pageable);
 }

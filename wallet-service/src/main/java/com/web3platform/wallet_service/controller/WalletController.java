@@ -2,7 +2,6 @@ package com.web3platform.wallet_service.controller;
 
 import com.web3platform.wallet_service.service.WalletService;
 import com.web3platform.wallet_service.service.TransactionService;
-import com.web3platform.wallet_service.dto.WalletBalanceDTO;
 import com.web3platform.wallet_service.dto.TransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,9 @@ public class WalletController {
     private TransactionService transactionService;
 
     @GetMapping("/balance")
-    public ResponseEntity<Map<String, String>> getWalletBalance() {
+    public ResponseEntity<Map<String, String>> getWalletBalance(@RequestParam String address) {
         try {
-            Map<String, String> balances = walletService.getWalletBalances();
+            Map<String, String> balances = walletService.getWalletBalances(address);
             return ResponseEntity.ok(balances);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
@@ -43,7 +42,7 @@ public class WalletController {
 
     @GetMapping("/transactions/{transactionId}")
     public ResponseEntity<TransactionDTO> getTransactionDetails(
-            @PathVariable String transactionId) {
+            @PathVariable Long transactionId) {
         try {
             TransactionDTO transaction = transactionService.getTransactionDetails(transactionId);
             return ResponseEntity.ok(transaction);

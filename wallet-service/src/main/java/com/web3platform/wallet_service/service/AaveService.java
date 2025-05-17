@@ -52,7 +52,7 @@ public class AaveService {
             transaction.setUserId(userId);
             transaction.setWalletAddress(walletAddress);
             transaction.setDappName("aave");
-            transaction.setTransactionType(DappTransaction.TransactionType.LEND);
+            transaction.setType(DappTransaction.TransactionType.LEND);
             transaction.setStatus(DappTransaction.TransactionStatus.PENDING);
             transaction.setContractAddress(aaveConfig.getLendingPoolAddress());
             transaction.setFunctionName("supply");
@@ -77,12 +77,12 @@ public class AaveService {
             );
 
             // Approve token spending
-            TransactionReceipt approveReceipt = token.approve(
+            Boolean approveReceipt = token.approve(
                     aaveConfig.getLendingPoolAddress(),
                     amount
             ).send();
 
-            if (!approveReceipt.isStatusOK()) {
+            if (!approveReceipt) {
                 transaction.setStatus(DappTransaction.TransactionStatus.FAILED);
                 transaction.setErrorMessage("Token approval failed");
                 return dappTransactionRepository.save(transaction);

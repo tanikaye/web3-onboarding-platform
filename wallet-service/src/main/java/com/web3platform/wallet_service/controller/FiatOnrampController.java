@@ -3,6 +3,7 @@ package com.web3platform.wallet_service.controller;
 import com.web3platform.wallet_service.model.FiatTransaction;
 import com.web3platform.wallet_service.service.FiatOnrampService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class FiatOnrampController {
             @PathVariable Long id) {
         FiatTransaction transaction = fiatOnrampService.getTransaction(id);
         if (!transaction.getUserId().equals(userId)) {
-            return ResponseEntity.forbidden().build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(transaction);
     }
